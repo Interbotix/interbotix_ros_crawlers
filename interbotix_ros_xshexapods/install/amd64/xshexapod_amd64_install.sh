@@ -5,13 +5,13 @@
 ubuntu_version="$(lsb_release -r -s)"
 
 if [ $ubuntu_version == "16.04" ]; then
-	ROS_NAME="kinetic"
+  ROS_NAME="kinetic"
 elif [ $ubuntu_version == "18.04" ]; then
-	ROS_NAME="melodic"
+  ROS_NAME="melodic"
 else
-	echo -e "Unsupported Ubuntu verison: $ubuntu_version"
-	echo -e "Interbotix Hexapod only works with 16.04 or 18.04"
-	exit 1
+  echo -e "Unsupported Ubuntu verison: $ubuntu_version"
+  echo -e "Interbotix Hexapod only works with 16.04 or 18.04"
+  exit 1
 fi
 
 echo "Ubuntu $ubuntu_version detected. ROS-$ROS_NAME chosen for installation.";
@@ -36,9 +36,9 @@ if [ $(dpkg-query -W -f='${Status}' ros-$ROS_NAME-desktop-full 2>/dev/null | gre
   sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
   sudo apt update
   sudo apt -y install ros-$ROS_NAME-desktop-full
-	if [ -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then
-		sudo rm /etc/ros/rosdep/sources.list.d/20-default.list
-	fi
+  if [ -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then
+    sudo rm /etc/ros/rosdep/sources.list.d/20-default.list
+  fi
   echo "source /opt/ros/$ROS_NAME/setup.bash" >> ~/.bashrc
   sudo apt -y install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
   sudo rosdep init
@@ -56,13 +56,13 @@ if [ ! -d "$INTERBOTIX_WS/src" ]; then
   cd $INTERBOTIX_WS/src
   git clone https://github.com/Interbotix/interbotix_ros_core.git
   git clone https://github.com/Interbotix/interbotix_ros_crawlers.git
-	cd interbotix_ros_crawlers
-	git checkout $ROS_NAME
-	cd ..
+  cd interbotix_ros_crawlers
+  git checkout $ROS_NAME
+  cd ..
   git clone https://github.com/Interbotix/interbotix_ros_toolboxes.git
-	cd interbotix_ros_toolboxes/interbotix_xs_toolbox
-	touch interbotix_xs_moveit_interface/CATKIN_IGNORE
-	touch interbotix_xs_ros_control/CATKIN_IGNORE
+  cd interbotix_ros_toolboxes/interbotix_xs_toolbox
+  touch interbotix_xs_moveit_interface/CATKIN_IGNORE
+  touch interbotix_xs_ros_control/CATKIN_IGNORE
   cd $INTERBOTIX_WS/src/interbotix_ros_core/interbotix_ros_xseries/interbotix_xs_sdk
   sudo cp 99-interbotix-udev.rules /etc/udev/rules.d/
   sudo udevadm control --reload-rules && sudo udevadm trigger
@@ -77,11 +77,11 @@ source $INTERBOTIX_WS/devel/setup.bash
 
 # Step 3: Setup Environment Variables
 if [ -z "$ROS_IP" ]; then
-	echo "Setting up Environment Variables..."
-	echo 'export ROS_IP=$(echo `hostname -I`)' >> ~/.bashrc
-	echo -e 'if [ -z "$ROS_IP" ]; then\n\texport ROS_IP=127.0.0.1\nfi' >> ~/.bashrc
+  echo "Setting up Environment Variables..."
+  echo 'export ROS_IP=$(echo `hostname -I`)' >> ~/.bashrc
+  echo -e 'if [ -z "$ROS_IP" ]; then\n\texport ROS_IP=127.0.0.1\nfi' >> ~/.bashrc
 else
-	echo "Environment variables already set!"
+  echo "Environment variables already set!"
 fi
 
 end_time="$(date -u +%s)"
