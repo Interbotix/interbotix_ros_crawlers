@@ -23,6 +23,7 @@ if [ ! -d "$INTERBOTIX_WS/src" ]; then
   mkdir -p $INTERBOTIX_WS/src
   cd $INTERBOTIX_WS
   catkin_make
+  cd src
   git clone https://github.com/Interbotix/interbotix_ros_crawlers.git
   # cd interbotix_ros_crawlers
   # git checkout $ROS_NAME
