@@ -1,0 +1,43 @@
+<launch>
+
+  <arg name="robot_model"                       default=""/>
+  <arg name="robot_name"                        default="$(arg robot_model)"/>
+  <arg name="external_urdf_loc"                 default=""/>
+  <arg name="use_rviz"                          default="false"/>
+  <arg name="rviz_frame"                        default="$(arg robot_name)/base_bottom_link"/>
+  <arg name="motor_configs"                     default="$(find interbotix_xshexapod_control)/config/$(arg robot_model).yaml"/>
+  <arg name="mode_configs"                      default="$(find interbotix_xshexapod_control)/config/modes.yaml"/>
+  <arg name="load_configs"                      default="true"/>
+  <arg name="use_pixels"                        default="false"/>
+
+  <include file="$(find interbotix_xshexapod_descriptions)/launch/xshexapod_description.launch">
+    <arg name="robot_model"                       value="$(arg robot_model)"/>
+    <arg name="robot_name"                        value="$(arg robot_name)"/>
+    <arg name="external_urdf_loc"                 value="$(arg external_urdf_loc)"/>
+    <arg name="use_rviz"                          value="$(arg use_rviz)"/>
+    <arg name="rviz_frame"                        value="$(arg rviz_frame)"/>
+  </include>
+
+  <node if="$(arg use_pixels)"
+    name="rpi_pixels"
+    pkg="interbotix_rpi_modules"
+    type="rpi_pixels"
+    output="screen"
+    ns="$(arg robot_name)"
+    launch-prefix="sudo -S -E PYTHONPATH=$(env PYTHONPATH)">
+    <param name="gpio_pin"                   value="18"/>
+    <param name="num_pixels"                 value="2"/>
+  </node>
+
+  <node
+    name="xs_sdk"
+    pkg="interbotix_xs_sdk"
+    type="xs_sdk"
+    output="screen"
+    ns="$(arg robot_name)">
+    <param name="motor_configs"                   value="$(arg motor_configs)"/>
+    <param name="mode_configs"                    value="$(arg mode_configs)"/>
+    <param name="load_configs"                    value="$(arg load_configs)"/>
+  </node>
+
+</launch>

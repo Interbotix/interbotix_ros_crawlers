@@ -1,0 +1,72 @@
+<launch>
+
+  <arg name="robot_model"                       default=""/>
+  <arg name="robot_name"                        default="$(arg robot_model)"/>
+  <arg name="external_urdf_loc"                 default=""/>
+  <arg name="use_rviz"                          default="false"/>
+  <arg name="rviz_frame"                        default="$(arg robot_name)/base_bottom_link"/>
+  <arg name="world_name"                        default="$(find interbotix_xshexapod_gazebo)/worlds/xshexapod_gazebo.world"/>
+  <arg name="gui"                               default="true"/>
+  <arg name="debug"                             default="false"/>
+  <arg name="paused"                            default="true"/>
+  <arg name="recording"                         default="false"/>
+  <arg name="use_sim_time"                      default="true"/>
+  <arg name="use_position_controllers"          default="true"/>
+
+  <env name="GAZEBO_RESOURCE_PATH"              value="$(find interbotix_xshexapod_gazebo)"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name"                        value="$(arg world_name)"/>
+    <arg name="gui"                               value="$(arg gui)" />
+    <arg name="debug"                             value="$(arg debug)" />
+    <arg name="paused"                            value="$(arg paused)"/>
+    <arg name="recording"                         value="$(arg recording)"/>
+    <arg name="use_sim_time"                      value="$(arg use_sim_time)"/>
+  </include>
+
+  <group if="$(arg use_position_controllers)">
+
+    <rosparam file="$(find interbotix_xshexapod_gazebo)/config/position_controllers/$(arg robot_model)_position_controllers.yaml" command="load" ns="$(arg robot_name)"/>
+
+    <node
+      name="controller_spawner"
+      pkg="controller_manager"
+      type="controller_manager"
+      respawn="false"
+      output="screen"
+      ns="$(arg robot_name)"
+      args="spawn joint_state_controller
+                  left_back_coxa_controller left_back_femur_controller left_back_tibia_controller
+                  left_middle_coxa_controller left_middle_femur_controller left_middle_tibia_controller
+                  left_front_coxa_controller left_front_femur_controller left_front_tibia_controller
+                  right_front_coxa_controller right_front_femur_controller right_front_tibia_controller
+                  right_middle_coxa_controller right_middle_femur_controller right_middle_tibia_controller
+                  right_back_coxa_controller right_back_femur_controller right_back_tibia_controller"/>
+
+  </group>
+
+  <include file="$(find interbotix_xshexapod_descriptions)/launch/xshexapod_description.launch">
+    <arg name="robot_model"                       value="$(arg robot_model)"/>
+    <arg name="robot_name"                        value="$(arg robot_name)"/>
+    <arg name="load_gazebo_configs"               value="true"/>
+    <arg name="external_urdf_loc"                 value="$(arg external_urdf_loc)"/>
+    <arg name="use_rviz"                          value="$(arg use_rviz)"/>
+    <arg name="rviz_frame"                        value="$(arg rviz_frame)"/>
+  </include>
+
+  <node
+    name="urdf_spawner"
+    pkg="gazebo_ros"
+    type="spawn_model"
+    respawn="false"
+    output="screen"
+    ns="$(arg robot_name)"
+	  args="-urdf -model $(arg robot_model) -param robot_description -z 0.15
+          -J left_back_coxa 0 -J left_back_femur -0.9 -J left_back_tibia 1.3
+          -J left_middle_coxa 0 -J left_middle_femur -0.9 -J left_middle_tibia 1.3
+          -J left_front_coxa 0 -J left_front_femur -0.9 -J left_front_tibia 1.3
+          -J right_back_coxa 0 -J right_back_femur -0.9 -J right_back_tibia 1.3
+          -J right_middle_coxa 0 -J right_middle_femur -0.9 -J right_middle_tibia 1.3
+          -J right_front_coxa 0 -J right_front_femur -0.9 -J right_front_tibia 1.3"/>
+
+</launch>

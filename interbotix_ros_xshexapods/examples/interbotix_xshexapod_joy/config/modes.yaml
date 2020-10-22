@@ -1,0 +1,42 @@
+groups:
+  left_back:
+    operating_mode: position
+    profile_type: time
+    profile_velocity: 1000
+    profile_acceleration: 250
+    torque_enable: true
+
+  left_middle:
+    operating_mode: position
+    profile_type: time
+    profile_velocity: 1000
+    profile_acceleration: 250
+    torque_enable: true
+
+  left_front:
+    operating_mode: position
+    profile_type: time
+    profile_velocity: 1000
+    profile_acceleration: 250
+    torque_enable: true
+
+  right_front:
+    operating_mode: position
+    profile_type: time
+    profile_velocity: 1000
+    profile_acceleration: 250
+    torque_enable: true
+
+  right_middle:
+    operating_mode: position
+    profile_type: time
+    profile_velocity: 1000
+    profile_acceleration: 250
+    torque_enable: true
+
+  right_back:
+    operating_mode: position
+    profile_type: time
+    profile_velocity: 1000
+    profile_acceleration: 250
+    torque_enable: true

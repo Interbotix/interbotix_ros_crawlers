@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<robot name="alpha" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:arg name="robot_name" default = "alpha"/>
+  <xacro:arg name="external_urdf_loc" default=""/>
+  <xacro:arg name="load_gazebo_configs" default="false"/>
+
+  <xacro:property name="urdf_loc" value="$(arg external_urdf_loc)"/>
+
+  <xacro:if value="$(arg load_gazebo_configs)">
+    <xacro:include filename="$(find interbotix_xshexapod_gazebo)/config/interbotix_texture.gazebo"/>
+  </xacro:if>
+
+  <material name="interbotix_black">
+    <texture filename="package://interbotix_xshexapod_descriptions/meshes/interbotix_black.png"/>
+  </material>
+
+  <xacro:macro name="leg" params="robot_name prefix x y yaw">
+
+    <joint name="${prefix}_coxa" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit effort="100" lower="${radians(-70)}" upper="${radians(70)}" velocity="${pi}"/>
+      <origin rpy="0 0 ${yaw}" xyz="${x} ${y} 0"/>
+      <parent link="${robot_name}/base_link"/>
+      <child link="${robot_name}/${prefix}_coxa_link"/>
+    </joint>
+
+    <link name="${robot_name}/${prefix}_coxa_link">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/alpha_meshes/alpha_coxa_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="interbotix_black"/>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/alpha_meshes/alpha_coxa_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0.026453 0 0"/>
+        <mass value="0.1" />
+        <inertia ixx="0.002" iyy="0.002" izz="0.002" ixy="0" ixz="0" iyz="0" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_femur" type="revolute">
+      <axis xyz="0 1 0"/>
+      <limit effort="100" lower="${radians(-100)}" upper="${radians(100)}" velocity="${pi}"/>
+      <origin rpy="0 0 0" xyz="0.09 0 0"/>
+      <parent link="${robot_name}/${prefix}_coxa_link"/>
+      <child link="${robot_name}/${prefix}_femur_link"/>
+    </joint>
+
+    <link name="${robot_name}/${prefix}_femur_link">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/alpha_meshes/alpha_femur_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="interbotix_black"/>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/alpha_meshes/alpha_femur_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0.026453 0 0"/>
+        <mass value="0.1" />
+        <inertia ixx="0.002" iyy="0.002" izz="0.002" ixy="0" ixz="0" iyz="0" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_tibia" type="revolute">
+      <axis xyz="0 1 0"/>
+      <limit effort="100" lower="${radians(-90)}" upper="${radians(90)}" velocity="${pi}"/>
+      <origin rpy="0 0 0" xyz="0.21 0 -0.05865"/>
+      <parent link="${robot_name}/${prefix}_femur_link"/>
+      <child link="${robot_name}/${prefix}_tibia_link"/>
+    </joint>
+
+    <link name="${robot_name}/${prefix}_tibia_link">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/alpha_meshes/alpha_tibia_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="interbotix_black"/>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/alpha_meshes/alpha_tibia_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0.026453 0 0"/>
+        <mass value="0.1" />
+        <inertia ixx="0.002" iyy="0.002" izz="0.002" ixy="0" ixz="0" iyz="0" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_foot" type="fixed">
+      <origin rpy="0 0 0" xyz="0 0 -0.26"/>
+      <parent link="${robot_name}/${prefix}_tibia_link"/>
+      <child link="${robot_name}/${prefix}_foot_link"/>
+    </joint>
+
+    <link name="${robot_name}/${prefix}_foot_link"/>
+
+  </xacro:macro>
+
+  <link name="$(arg robot_name)/base_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xshexapod_descriptions/meshes/alpha_meshes/alpha_base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xshexapod_descriptions/meshes/alpha_meshes/alpha_base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0.02"/>
+      <mass value="0.5" />
+      <inertia ixx="0.002" iyy="0.002" izz="0.002" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+  </link>
+
+  <joint name="base_bottom" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 -0.05065"/>
+    <parent link="$(arg robot_name)/base_link"/>
+    <child link="$(arg robot_name)/base_bottom_link"/>
+  </joint>
+
+  <link name="$(arg robot_name)/base_bottom_link">
+  </link>
+
+  <xacro:leg robot_name="$(arg robot_name)" prefix="right_front" x="0.28" y="-0.12" yaw="${-pi/4}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="right_middle" x="0" y="-0.2" yaw="${-pi/2}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="right_back" x="-0.28" y="-0.12" yaw="${-3*pi/4}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="left_front" x="0.28" y="0.12" yaw="${pi/4}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="left_middle" x="0" y="0.2" yaw="${pi/2}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="left_back" x="-0.28" y="0.12" yaw="${3*pi/4}"/>
+
+  <xacro:if value="${urdf_loc != ''}">
+    <xacro:include filename="${urdf_loc}"/>
+  </xacro:if>
+
+</robot>

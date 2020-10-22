@@ -1,0 +1,458 @@
+port: /dev/ttyDXL
+
+joint_order: [left_back_coxa, left_back_femur, left_back_tibia,
+              left_middle_coxa, left_middle_femur, left_middle_tibia,
+              left_front_coxa, left_front_femur, left_front_tibia,
+              right_front_coxa, right_front_femur, right_front_tibia,
+              right_middle_coxa, right_middle_femur, right_middle_tibia,
+              right_back_coxa, right_back_femur, right_back_tibia]
+
+sleep_positions: [0.2, -0.8, 0.8, 0, -0.8, 0.8, -0.2, -0.8, 0.8,
+                  0.2, -0.8, 0.8, 0, -0.8, 0.8, -0.2, -0.8, 0.8]
+
+joint_state_publisher:
+  update_rate: 30
+  publish_states: true
+  topic_name: joint_states
+
+shadows:
+  left_back_coxa:
+    shadow_list: [left_back_coxa_shadow]
+    calibrate: true
+
+  left_back_femur:
+    shadow_list: [left_back_femur_shadow]
+    calibrate: true
+
+  left_back_tibia:
+    shadow_list: [left_back_tibia_shadow]
+    calibrate: true
+
+  left_middle_coxa:
+    shadow_list: [left_middle_coxa_shadow]
+    calibrate: true
+
+  left_middle_femur:
+    shadow_list: [left_middle_femur_shadow]
+    calibrate: true
+
+  left_middle_tibia:
+    shadow_list: [left_middle_tibia_shadow]
+    calibrate: true
+
+  left_front_coxa:
+    shadow_list: [left_front_coxa_shadow]
+    calibrate: true
+
+  left_front_femur:
+    shadow_list: [left_front_femur_shadow]
+    calibrate: true
+
+  left_front_tibia:
+    shadow_list: [left_front_tibia_shadow]
+    calibrate: true
+
+  right_front_coxa:
+    shadow_list: [right_front_coxa_shadow]
+    calibrate: true
+
+  right_front_femur:
+    shadow_list: [right_front_femur_shadow]
+    calibrate: true
+
+  right_front_tibia:
+    shadow_list: [right_front_tibia_shadow]
+    calibrate: true
+
+  right_middle_coxa:
+    shadow_list: [right_middle_coxa_shadow]
+    calibrate: true
+
+  right_middle_femur:
+    shadow_list: [right_middle_femur_shadow]
+    calibrate: true
+
+  right_middle_tibia:
+    shadow_list: [right_middle_tibia_shadow]
+    calibrate: true
+
+  right_back_coxa:
+    shadow_list: [right_back_coxa_shadow]
+    calibrate: true
+
+  right_back_femur:
+    shadow_list: [right_back_femur_shadow]
+    calibrate: true
+
+  right_back_tibia:
+    shadow_list: [right_back_tibia_shadow]
+    calibrate: true
+
+groups:
+  left_back: [left_back_coxa, left_back_femur, left_back_tibia]
+  left_middle: [left_middle_coxa, left_middle_femur, left_middle_tibia]
+  left_front: [left_front_coxa, left_front_femur, left_front_tibia]
+  right_front: [right_front_coxa, right_front_femur, right_front_tibia]
+  right_middle: [right_middle_coxa, right_middle_femur, right_middle_tibia]
+  right_back: [right_back_coxa, right_back_femur, right_back_tibia]
+
+motors:
+  left_back_coxa:
+    ID: 1
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  left_back_coxa_shadow:
+    ID: 2
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 1
+
+  left_back_femur:
+    ID: 3
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  left_back_femur_shadow:
+    ID: 4
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 3
+
+  left_back_tibia:
+    ID: 5
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  left_back_tibia_shadow:
+    ID: 6
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 5
+
+  left_middle_coxa:
+    ID: 7
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  left_middle_coxa_shadow:
+    ID: 8
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 7
+
+  left_middle_femur:
+    ID: 9
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  left_middle_femur_shadow:
+    ID: 10
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 9
+
+  left_middle_tibia:
+    ID: 11
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  left_middle_tibia_shadow:
+    ID: 12
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 11
+
+  left_front_coxa:
+    ID: 13
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  left_front_coxa_shadow:
+    ID: 14
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 13
+
+  left_front_femur:
+    ID: 15
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  left_front_femur_shadow:
+    ID: 16
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 15
+
+  left_front_tibia:
+    ID: 17
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  left_front_tibia_shadow:
+    ID: 18
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 17
+
+  right_front_coxa:
+    ID: 19
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  right_front_coxa_shadow:
+    ID: 20
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 19
+
+  right_front_femur:
+    ID: 21
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  right_front_femur_shadow:
+    ID: 22
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 21
+
+  right_front_tibia:
+    ID: 23
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  right_front_tibia_shadow:
+    ID: 24
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 23
+
+  right_middle_coxa:
+    ID: 25
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  right_middle_coxa_shadow:
+    ID: 26
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 25
+
+  right_middle_femur:
+    ID: 27
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  right_middle_femur_shadow:
+    ID: 28
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 27
+
+  right_middle_tibia:
+    ID: 29
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  right_middle_tibia_shadow:
+    ID: 30
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 29
+
+  right_back_coxa:
+    ID: 31
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  right_back_coxa_shadow:
+    ID: 32
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 31
+
+  right_back_femur:
+    ID: 33
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  right_back_femur_shadow:
+    ID: 34
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 33
+
+  right_back_tibia:
+    ID: 35
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 1
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 255
+
+  right_back_tibia_shadow:
+    ID: 36
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 200
+    Min_Position_Limit: 0
+    Max_Position_Limit: 4095
+    Secondary_ID: 35

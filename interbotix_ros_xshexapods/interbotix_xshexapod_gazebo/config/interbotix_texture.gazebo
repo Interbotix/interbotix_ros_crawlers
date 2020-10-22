@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <legacyModeNS>true</legacyModeNS>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/base_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/left_back_coxa_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/left_back_femur_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/left_back_tibia_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/left_middle_coxa_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/left_middle_femur_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/left_middle_tibia_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/left_front_coxa_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/left_front_femur_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/left_front_tibia_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/right_front_coxa_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/right_front_femur_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/right_front_tibia_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/right_middle_coxa_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/right_middle_femur_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/right_middle_tibia_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/right_back_coxa_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/right_back_femur_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/right_back_tibia_link">
+    <material>Custom/Interbotix</material>
+  </gazebo>
+
+</robot>

@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<robot name="pxmark4" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:arg name="robot_name" default = "pxmark4"/>
+  <xacro:arg name="external_urdf_loc" default=""/>
+  <xacro:arg name="load_gazebo_configs" default="false"/>
+
+  <xacro:property name="urdf_loc" value="$(arg external_urdf_loc)"/>
+
+  <xacro:if value="$(arg load_gazebo_configs)">
+    <xacro:include filename="$(find interbotix_xshexapod_gazebo)/config/interbotix_texture.gazebo"/>
+  </xacro:if>
+
+  <material name="interbotix_black">
+    <texture filename="package://interbotix_xshexapod_descriptions/meshes/interbotix_black.png"/>
+  </material>
+
+  <xacro:macro name="leg" params="robot_name prefix x y yaw">
+
+    <joint name="${prefix}_coxa" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit effort="3" lower="${radians(-55)}" upper="${radians(55)}" velocity="${pi}"/>
+      <origin rpy="0 0 ${yaw}" xyz="${x} ${y} 0"/>
+      <parent link="${robot_name}/base_link"/>
+      <child link="${robot_name}/${prefix}_coxa_link"/>
+      <dynamics friction="0.5"/>
+    </joint>
+
+    <transmission name="trans_${prefix}_coxa">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}_coxa">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}_coxa_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <link name="${robot_name}/${prefix}_coxa_link">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/pxmark4_meshes/pxmark4_coxa_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="interbotix_black"/>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/pxmark4_meshes/pxmark4_coxa_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0.019066 -0.000002 0.006577"/>
+        <mass value="0.02471" />
+        <inertia ixx="0.0000215400" iyy="0.00002657000" izz="0.00002925000" ixy="-0.00000000122" ixz="-0.00000192741" iyz="-0.00000000001" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_femur" type="revolute">
+      <axis xyz="0 1 0"/>
+      <limit effort="3" lower="${radians(-98)}" upper="${radians(90)}" velocity="${pi}"/>
+      <origin rpy="0 0 0" xyz="0.052907539 0 0"/>
+      <parent link="${robot_name}/${prefix}_coxa_link"/>
+      <child link="${robot_name}/${prefix}_femur_link"/>
+      <dynamics friction="0.5"/>
+    </joint>
+
+    <transmission name="trans_${prefix}_femur">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}_femur">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}_femur_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <link name="${robot_name}/${prefix}_femur_link">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/pxmark4_meshes/pxmark4_femur_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="interbotix_black"/>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/pxmark4_meshes/pxmark4_femur_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0.020226 -0.00029 -0.00063"/>
+        <mass value="0.085834" />
+        <inertia ixx="0.0000288700" iyy="0.0000750200" izz="0.0000867200" ixy="0.0000002419" ixz="0.0000048494" iyz="0.0000000003" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_tibia" type="revolute">
+      <axis xyz="0 1 0"/>
+      <limit effort="3" lower="${radians(-45)}" upper="${radians(125)}" velocity="${pi}"/>
+      <origin rpy="0 0 0" xyz="0.06 0 -0.015"/>
+      <parent link="${robot_name}/${prefix}_femur_link"/>
+      <child link="${robot_name}/${prefix}_tibia_link"/>
+      <dynamics friction="0.5"/>
+    </joint>
+
+    <transmission name="trans_${prefix}_tibia">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}_tibia">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}_tibia_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <link name="${robot_name}/${prefix}_tibia_link">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/pxmark4_meshes/pxmark4_tibia_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="interbotix_black"/>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://interbotix_xshexapod_descriptions/meshes/pxmark4_meshes/pxmark4_tibia_link.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0.036797 0.000054 -0.011991"/>
+        <mass value="0.171825" />
+        <inertia ixx="0.0001762000" iyy="0.0005158000" izz="0.0003768000" ixy="-0.0000014522" ixz="0.0001789000" iyz="0.0000006181" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_foot" type="fixed">
+      <origin rpy="0 0 0" xyz="0.095 0 -0.09"/>
+      <parent link="${robot_name}/${prefix}_tibia_link"/>
+      <child link="${robot_name}/${prefix}_foot_link"/>
+    </joint>
+
+    <link name="${robot_name}/${prefix}_foot_link"/>
+
+  </xacro:macro>
+
+  <link name="$(arg robot_name)/base_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xshexapod_descriptions/meshes/pxmark4_meshes/pxmark4_base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xshexapod_descriptions/meshes/pxmark4_meshes/pxmark4_base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.001522 0.000302 0.015345"/>
+      <mass value="1.522054" />
+      <inertia ixx="0.0044660000" iyy="0.0084890000" izz="0.0092020000" ixy="0.0000076888" ixz="-0.0001245000" iyz="0.0000050996" />
+    </inertial>
+  </link>
+
+  <joint name="base_bottom" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 -0.033"/>
+    <parent link="$(arg robot_name)/base_link"/>
+    <child link="$(arg robot_name)/base_bottom_link"/>
+  </joint>
+
+  <link name="$(arg robot_name)/base_bottom_link">
+  </link>
+
+  <xacro:leg robot_name="$(arg robot_name)" prefix="right_front" x="0.125" y="-0.065" yaw="${-pi/4}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="right_middle" x="0" y="-0.1" yaw="${-pi/2}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="right_back" x="-0.125" y="-0.065" yaw="${-3*pi/4}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="left_front" x="0.125" y="0.065" yaw="${pi/4}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="left_middle" x="0" y="0.1" yaw="${pi/2}"/>
+  <xacro:leg robot_name="$(arg robot_name)" prefix="left_back" x="-0.125" y="0.065" yaw="${3*pi/4}"/>
+
+  <xacro:if value="${urdf_loc != ''}">
+    <xacro:include filename="${urdf_loc}"/>
+  </xacro:if>
+
+</robot>

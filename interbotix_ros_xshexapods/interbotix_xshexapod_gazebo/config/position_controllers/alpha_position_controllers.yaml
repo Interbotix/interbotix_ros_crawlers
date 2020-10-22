@@ -1,0 +1,95 @@
+# Publish all joint states
+# Creates the /joint_states topic necessary in ROS
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+left_back_coxa_controller:
+  type: effort_controllers/JointPositionController
+  joint: left_back_coxa
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+left_back_femur_controller:
+  type: effort_controllers/JointPositionController
+  joint: left_back_femur
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+left_back_tibia_controller:
+  type: effort_controllers/JointPositionController
+  joint: left_back_tibia
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+left_middle_coxa_controller:
+  type: effort_controllers/JointPositionController
+  joint: left_middle_coxa
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+left_middle_femur_controller:
+  type: effort_controllers/JointPositionController
+  joint: left_middle_femur
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+left_middle_tibia_controller:
+  type: effort_controllers/JointPositionController
+  joint: left_middle_tibia
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+left_front_coxa_controller:
+  type: effort_controllers/JointPositionController
+  joint: left_front_coxa
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+left_front_femur_controller:
+  type: effort_controllers/JointPositionController
+  joint: left_front_femur
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+left_front_tibia_controller:
+  type: effort_controllers/JointPositionController
+  joint: left_front_tibia
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+right_front_coxa_controller:
+  type: effort_controllers/JointPositionController
+  joint: right_front_coxa
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+right_front_femur_controller:
+  type: effort_controllers/JointPositionController
+  joint: right_front_femur
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+right_front_tibia_controller:
+  type: effort_controllers/JointPositionController
+  joint: right_front_tibia
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+right_middle_coxa_controller:
+  type: effort_controllers/JointPositionController
+  joint: right_middle_coxa
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+right_middle_femur_controller:
+  type: effort_controllers/JointPositionController
+  joint: right_middle_femur
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+right_middle_tibia_controller:
+  type: effort_controllers/JointPositionController
+  joint: right_middle_tibia
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+right_back_coxa_controller:
+  type: effort_controllers/JointPositionController
+  joint: right_back_coxa
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+right_back_femur_controller:
+  type: effort_controllers/JointPositionController
+  joint: right_back_femur
+  pid: {p: 100.0, i: 0.01, d: 0.0}
+
+right_back_tibia_controller:
+  type: effort_controllers/JointPositionController
+  joint: right_back_tibia
+  pid: {p: 100.0, i: 0.01, d: 0.0}

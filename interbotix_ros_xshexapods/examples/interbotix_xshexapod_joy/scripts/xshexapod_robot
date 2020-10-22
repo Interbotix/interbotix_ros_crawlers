@@ -1,0 +1,262 @@
+#!/usr/bin/env python
+
+import rospy
+import copy
+import threading
+from interbotix_xshexapod_joy.msg import HexJoy
+from interbotix_xs_modules import angle_manipulation as ang
+from interbotix_xs_modules.hexapod import InterbotixHexapodXS
+
+# Color Macros in Hexidecimal (used to control colors on the Neopixels)
+BLUE = 0x0000FF
+RED = 0xFF0000
+GREEN = 0x00FF00
+CLEAR = 0x000000
+INTERBOTIX_BLUE = 0x00B0F0
+MAGENTA = 0xFF00FF
+YELLOW = 0xFFFF00
+BROWN = 0x964B00
+
+### @brief Class that allows joystick control of the hexapod and Neopixels
+class HexapodRobot(object):
+    def __init__(self):
+        self.rotate_step = 0.02                                                 # Step size [rad] when rotating the hexapod body in place
+        self.translate_step = 0.007                                             # Step size [meters] when translating the hexapod body or one of its legs in place
+        self.move_type = "move_hexapod"                                         # Either holds 'move_hexapod' or 'move_leg' modes based on controller input
+        self.current_loop_rate = 25                                             # Frequency [Hz] at which the 'controller' function is called per second
+        self.current_gait = "tripod"                                            # Currently selected gait
+        self.current_leg = "right_front"                                        # Currently selected leg when in 'move_leg' mode
+        self.loop_rates = {"course" : 25, "fine" : 25}                          # Holds the 'course' and 'fine' loop rates to easily toggle between different frequency rates
+        self.gait_types = ["tripod", "ripple", "wave"]                          # Three supported gaits that can be selected
+        self.leg_list = ["right_front", "left_front", "right_middle", "left_middle", "right_back", "left_back"]                                             # List of all legs in the hexapod
+        self.led_states = {"tripod" : INTERBOTIX_BLUE, "ripple" : MAGENTA, "wave" : GREEN, "pose" : YELLOW, "leg" : RED, "stance" : BROWN, "reboot" : BLUE} # Gait & pose mapping to LED colors
+        self.led_blinks = {"left_front" : 1, "left_middle" : 2, "left_back" : 3, "right_front" : 1, "right_middle" : 2, "right_back" : 3, "set_home" : 2}   # Selected leg 'blink number' mapping
+        self.joy_msg = HexJoy()                                                 # Latest HexJoy ROS message
+        self.joy_mutex = threading.Lock()                                       # Mutex to prevent reading and writing to self.joy_msg simultaneously
+        self.rate = rospy.Rate(self.current_loop_rate)                          # ROS Rate variable to change control loop speed
+        robot_model = rospy.get_param("~robot_model")                           # Robot model type (ex. wxmark4)
+        robot_name = rospy.get_namespace().strip("/")                           # Robot name
+        self.num_steps = rospy.get_param("~num_steps")                          # Number of steps to complete one wave in the first sinusoid function
+        self.x_stride = rospy.get_param("~x_stride")                            # Desired travel distance [meters] in a gait cycle (i.e. stride) along self.T_fb's X-axis
+        self.y_stride = rospy.get_param("~y_stride")                            # Desired travel distance [meters] in a gait cycle (i.e. stride) along self.T_fb's Y-axis
+        self.yaw_stride = rospy.get_param("~yaw_stride")                        # Desired travel distance [radians] in a gait cylce (i.e. stride) around self.T_fb's Z-axis
+        self.max_foot_height = rospy.get_param("~max_foot_height")              # Max leg-lift height [meters] during the gait cycle
+        self.x_pos_yaw_fudge = rospy.get_param("~x_pos_yaw_fudge")              # Fudge factor to account for drift when moving forward along self.T_fb's X-axis
+        self.x_neg_yaw_fudge = rospy.get_param("~x_neg_yaw_fudge")              # Fudge factor to account for drift when moving backward along self.T_fb's X-axis
+        self.y_pos_yaw_fudge = rospy.get_param("~y_pos_yaw_fudge")              # Fudge factor to account for drift when moving left along self.T_fb's Y-axis
+        self.y_neg_yaw_fudge = rospy.get_param("~y_neg_yaw_fudge")              # Fudge factor to account for drift when moving right along self.T_fb's Y-axis.
+        self.hexbot = InterbotixHexapodXS(robot_model, robot_name, False)       # Hexapod Module instantiation
+        self.update_speed(self.current_loop_rate)
+        self.update_gait(self.gait_types.index(self.current_gait))
+        rospy.Subscriber("commands/joy_processed", HexJoy, self.joy_control_cb) # ROS Subscriber to get the joystick commands
+
+    ### @brief Helper function that updates the frequency at which the main control loop runs
+    ### @param loop_rate - desired loop frequency [Hz]
+    def update_speed(self, loop_rate):
+        self.current_loop_rate = loop_rate
+        self.rate = rospy.Rate(self.current_loop_rate)
+        rospy.loginfo("Current loop rate is %d Hz." % self.current_loop_rate)
+        brightness = int(10 + ((255 - 10) / (40.0 - 10.0)) * (self.current_loop_rate - 10.0))
+        self.hexbot.pixels.set_brightness(brightness)
+
+    ### @brief Helper function that updates which leg is selected when doing individual leg control
+    ### @param leg_indx - index of desired leg in self.leg_list
+    def update_leg(self, leg_indx):
+        self.current_leg = self.leg_list[leg_indx]
+        rospy.loginfo("Now controlling the %s leg." % self.current_leg)
+        if "left" in self.current_leg:
+            self.hexbot.pixels.blink(pixel=0, iterations=self.led_blinks[self.current_leg])
+        else:
+            self.hexbot.pixels.blink(pixel=1, iterations=self.led_blinks[self.current_leg])
+
+    ### @brief Helper function that updates which gait is to be used when walking
+    ### @param gait_indx index of desired gait in self.gait_types
+    def update_gait(self, gait_indx):
+        self.current_gait = self.gait_types[gait_indx]
+        rospy.loginfo("Now using the %s gait." % self.current_gait)
+        self.hexbot.pixels.set_color(color=self.led_states[self.current_gait], set_all_leds=True)
+
+    ### @brief Helper function that updates the hexapod's stance to be wider or narrower
+    ### @param mod_value - relative distance value by which to tighten or widen the hexapod stance [m]
+    def update_stance(self, mod_value):
+        self.hexbot.pixels.set_color(color=self.led_states["stance"], set_all_leds=True)
+        success = self.hexbot.hex.modify_stance(mod_value)
+        if success:
+            rospy.loginfo("Stance modified by %.2f centimeters." % (mod_value * 100))
+        self.hexbot.pixels.set_color(color=self.led_states[self.current_gait], set_all_leds=True)
+
+    ### @brief Helper function to change the robot's pose
+    ### @param pose - either 'home' or 'sleep'
+    def update_pose(self, pose):
+        self.hexbot.pixels.set_color(color=self.led_states["pose"], set_all_leds=True)
+        self.hexbot.hex.reset_hexapod(pose)
+        if (self.move_type == "move_hexapod"):
+            self.hexbot.pixels.set_color(color=self.led_states[self.current_gait], set_all_leds=True)
+        elif (self.move_type == "move_leg"):
+            self.hexbot.pixels.set_color(color=self.led_states["leg"], set_all_leds=True)
+
+    ### @brief ROS Subscriber Callback for incoming joystick commands
+    ### @param msg - ROS message of the HexJoy type
+    def joy_control_cb(self, msg):
+        with self.joy_mutex:
+            self.joy_msg = copy.deepcopy(msg)
+
+        # Check the speed_cmd
+        if (msg.speed_cmd == HexJoy.SPEED_INC and self.current_loop_rate < 40):
+            self.update_speed(self.current_loop_rate + 1)
+        elif (msg.speed_cmd == HexJoy.SPEED_DEC and self.current_loop_rate > 12):
+            self.update_speed(self.current_loop_rate - 1)
+
+        # Check the speed_toggle_cmd
+        if (msg.speed_toggle_cmd == HexJoy.SPEED_COURSE):
+            self.loop_rates["fine"] = self.current_loop_rate
+            rospy.loginfo("Switched to Course Control")
+            self.update_speed(self.loop_rates["course"])
+        elif (msg.speed_toggle_cmd == HexJoy.SPEED_FINE):
+            self.loop_rates["course"] = self.current_loop_rate
+            rospy.loginfo("Switched to Fine Control")
+            self.update_speed(self.loop_rates["fine"])
+
+        # Check the leg_toggle_cmd
+        if (msg.leg_toggle_cmd == HexJoy.LEG_NEXT):
+            indx = self.leg_list.index(self.current_leg) + 1
+            if indx == len(self.leg_list): indx = 0
+            self.update_leg(indx)
+        elif (msg.leg_toggle_cmd == HexJoy.LEG_PREVIOUS):
+            indx = self.leg_list.index(self.current_leg) - 1
+            if indx == -1: indx = len(self.leg_list) - 1
+            self.update_leg(indx)
+
+        # Check the move_type_cmd
+        if (msg.move_type_cmd == HexJoy.MOVE_HEXAPOD):
+            self.hexbot.hex.reset_hexapod("home")
+            self.move_type = "move_hexapod"
+            rospy.loginfo("Move Hexapod mode toggled.")
+            self.update_gait(self.gait_types.index(self.current_gait))
+        elif (msg.move_type_cmd == HexJoy.MOVE_LEG):
+            self.move_type = "move_leg"
+            rospy.loginfo("Move Leg mode toggled. Current leg is %s." % self.current_leg)
+            self.hexbot.pixels.set_color(color=self.led_states["leg"], set_all_leds=True)
+            self.update_leg(self.leg_list.index(self.current_leg))
+
+        # Check the pose_cmd
+        if (msg.pose_cmd == HexJoy.HOME_POSE):
+            self.update_pose("home")
+        elif (msg.pose_cmd == HexJoy.SLEEP_POSE):
+            self.update_pose("sleep")
+
+        # Check the gait_toggle_cmd
+        if (msg.gait_toggle_cmd == HexJoy.GAIT_NEXT):
+            indx = self.gait_types.index(self.current_gait) + 1
+            if indx == len(self.gait_types): indx = 0
+            self.update_gait(indx)
+        elif (msg.gait_toggle_cmd == HexJoy.GAIT_PREVIOUS):
+            indx = self.gait_types.index(self.current_gait) - 1
+            if indx == -1: indx = len(self.gait_types) - 1
+            self.update_gait(indx)
+
+        # Check the stance_cmd
+        if (msg.stance_cmd == HexJoy.WIDEN_STANCE):
+            self.update_stance(0.01)
+        elif (msg.stance_cmd == HexJoy.NARROW_STANCE):
+            self.update_stance(-0.01)
+
+        # Check the reboot_cmd
+        if (msg.reboot_cmd == HexJoy.REBOOT_MOTORS):
+            self.hexbot.pixels.set_color(color=self.led_states["reboot"], set_all_leds=True)
+            self.hexbot.dxl.robot_reboot_motors("group", "all", True, True)
+            self.hexbot.pixels.set_color(color=self.led_states["leg"], set_all_leds=True)
+
+        # Check the set_home_pose_cmd
+        if (msg.set_home_pose_cmd == HexJoy.SET_HOME_POSE):
+            foot_points = self.hexbot.hex.get_foot_points()
+            T_fb = self.hexbot.hex.get_body_pose()
+            self.hexbot.hex.set_home_foot_points("all", foot_points)
+            self.hexbot.hex.set_home_height(T_fb[2,3])
+            self.hexbot.pixels.blink(set_all_leds=True, period=100, iterations=self.led_blinks["set_home"])
+
+    ## @brief Control loop for moving the hexapod
+    def controller(self):
+        with self.joy_mutex:
+            msg = copy.deepcopy(self.joy_msg)
+
+        if (self.move_type == "move_hexapod"):
+            place_position_changed = sum([msg.place_x_cmd, msg.place_y_cmd, msg.place_z_cmd]) > 0
+            place_orientation_changed = sum([msg.place_roll_cmd, msg.place_pitch_cmd]) > 0
+            world_position_changed = sum([msg.world_x_cmd, msg.world_y_cmd]) > 0
+            world_orientation_changed = msg.world_yaw_cmd > 0
+
+            if (world_position_changed or world_orientation_changed):
+
+                x_stride = 0
+                y_stride = 0
+                yaw_stride = 0
+
+                if (msg.world_x_cmd == HexJoy.WORLD_X_INC):
+                    x_stride = self.x_stride
+                    yaw_stride += self.x_pos_yaw_fudge
+                elif (msg.world_x_cmd == HexJoy.WORLD_X_DEC):
+                    x_stride = -self.x_stride
+                    yaw_stride += self.x_neg_yaw_fudge
+
+                if (msg.world_y_cmd == HexJoy.WORLD_Y_INC):
+                    y_stride = self.y_stride
+                    yaw_stride += self.y_pos_yaw_fudge
+                elif (msg.world_y_cmd == HexJoy.WORLD_Y_DEC):
+                    y_stride = -self.y_stride
+                    yaw_stride += self.y_neg_yaw_fudge
+
+                if (msg.world_yaw_cmd == HexJoy.WORLD_YAW_CCW):
+                    yaw_stride = self.yaw_stride
+                elif (msg.world_yaw_cmd == HexJoy.WORLD_YAW_CW):
+                    yaw_stride = -self.yaw_stride
+
+                self.hexbot.hex.move_in_world(x_stride, y_stride, yaw_stride, self.max_foot_height, self.num_steps, self.current_gait, cycle_freq=self.current_loop_rate)
+
+            elif (place_position_changed or place_orientation_changed):
+                T_fb = self.hexbot.hex.get_body_pose()
+                rpy = ang.rotationMatrixToEulerAngles(T_fb[:3,:3])
+
+                if place_position_changed:
+                    if (msg.place_x_cmd == HexJoy.PLACE_X_INC): T_fb[0,3] += self.translate_step
+                    elif (msg.place_x_cmd == HexJoy.PLACE_X_DEC): T_fb[0,3] -= self.translate_step
+
+                    if (msg.place_y_cmd == HexJoy.PLACE_Y_INC): T_fb[1,3] += self.translate_step
+                    elif (msg.place_y_cmd == HexJoy.PLACE_Y_DEC): T_fb[1,3] -= self.translate_step
+
+                    if (msg.place_z_cmd == HexJoy.PLACE_Z_INC): T_fb[2,3] += self.translate_step
+                    elif (msg.place_z_cmd == HexJoy.PLACE_Z_DEC): T_fb[2,3] -= self.translate_step
+
+                if place_orientation_changed:
+                    if (msg.place_roll_cmd == HexJoy.PLACE_ROLL_CCW): rpy[0] += self.rotate_step
+                    elif (msg.place_roll_cmd == HexJoy.PLACE_ROLL_CW): rpy[0] -= self.rotate_step
+
+                    if (msg.place_pitch_cmd == HexJoy.PLACE_PITCH_UP): rpy[1] -= self.rotate_step
+                    elif (msg.place_pitch_cmd == HexJoy.PLACE_PITCH_DOWN): rpy[1] += self.rotate_step
+
+                self.hexbot.hex.move_in_place(T_fb[0,3], T_fb[1,3], T_fb[2,3], rpy[0], rpy[1], rpy[2], 0.15, 0.075, False)
+
+        elif (self.move_type == "move_leg"):
+            leg_position_changed = sum([msg.world_x_cmd, msg.world_y_cmd, msg.place_z_cmd]) > 0
+            if (leg_position_changed):
+                command = [0, 0, 0]
+                if (self.joy_msg.world_x_cmd == HexJoy.WORLD_X_INC): command[0] = self.translate_step
+                elif (self.joy_msg.world_x_cmd == HexJoy.WORLD_X_DEC): command[0] = -self.translate_step
+
+                if (self.joy_msg.world_y_cmd == HexJoy.WORLD_Y_INC): command[1] = self.translate_step
+                elif (self.joy_msg.world_y_cmd == HexJoy.WORLD_Y_DEC): command[1] = -self.translate_step
+
+                if (self.joy_msg.place_z_cmd == HexJoy.PLACE_Z_INC): command[2] = self.translate_step
+                elif (self.joy_msg.place_z_cmd == HexJoy.PLACE_Z_DEC): command[2] = -self.translate_step
+
+                self.hexbot.hex.move_leg(self.current_leg, command, 0.15, 0.075, False)
+
+def main():
+    rospy.init_node("xshexapod_robot")
+    hexapod = HexapodRobot()
+    while not rospy.is_shutdown():
+        hexapod.controller()
+        hexapod.rate.sleep()
+
+if __name__=='__main__':
+    main()
