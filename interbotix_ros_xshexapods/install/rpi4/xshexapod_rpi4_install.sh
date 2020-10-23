@@ -102,7 +102,7 @@ if [ "$run_joy_at_boot" = true ]; then
 
 source /opt/ros/$ROS_NAME/setup.bash
 source $INTERBOTIX_WS/devel/setup.bash
-roslaunch interbotix_xshexapod_joy xshexapod_joy.launch use_rviz:=false robot_model:=$ROBOT_MODEL" >> xshexapod_rpi4_launch.sh
+roslaunch interbotix_xshexapod_joy xshexapod_joy.launch use_rviz:=false robot_model:=$ROBOT_MODEL" > xshexapod_rpi4_launch.sh
 
   chmod +x xshexapod_rpi4_launch.sh
   sudo cp xshexapod_rpi4_boot.service /lib/systemd/system/
