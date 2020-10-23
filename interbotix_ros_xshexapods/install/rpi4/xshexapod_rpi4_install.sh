@@ -95,14 +95,15 @@ if [ "$run_joy_at_boot" = true ]; then
   touch xshexapod_rpi4_launch.sh
   echo -e "#!/usr/bin/env bash
 
-  # This script is called by the xshexapod_rpi4_boot.service file when
-  # the Raspberry Pi boots. It just sources the ROS related workspaces
-  # and launches the xshexapod_joy launch file. It is populated with the correct commands
-  # from the xshexapod_rpi4_install.sh installation script.
+# This script is called by the xshexapod_rpi4_boot.service file when
+# the Raspberry Pi boots. It just sources the ROS related workspaces
+# and launches the xshexapod_joy launch file. It is populated with the correct commands
+# from the xshexapod_rpi4_install.sh installation script.
 
-  source /opt/ros/$ROS_NAME/setup.bash
-  source $INTERBOTIX_WS/devel/setup.bash
-  roslaunch interbotix_xshexapod_joy xshexapod_joy.launch use_rviz:=false robot_model:=$ROBOT_MODEL" >> xshexapod_rpi4_launch.sh
+source /opt/ros/$ROS_NAME/setup.bash
+source $INTERBOTIX_WS/devel/setup.bash
+roslaunch interbotix_xshexapod_joy xshexapod_joy.launch use_rviz:=false robot_model:=$ROBOT_MODEL" >> xshexapod_rpi4_launch.sh
+
   chmod +x xshexapod_rpi4_launch.sh
   sudo cp xshexapod_rpi4_boot.service /lib/systemd/system/
   sudo systemctl daemon-reload
