@@ -64,7 +64,7 @@ if [ ! -d "$INTERBOTIX_WS/src" ]; then
   git checkout $ROS_NAME
   cd ..
   git clone https://github.com/Interbotix/interbotix_ros_toolboxes.git
-  cd interbotix_ros_toolboxes/interboix_xs_toolbox
+  cd interbotix_ros_toolboxes/interbotix_xs_toolbox
   touch interbotix_xs_moveit_interface/CATKIN_IGNORE
   touch interbotix_xs_ros_control/CATKIN_IGNORE
   cd $INTERBOTIX_WS/src/interbotix_ros_core/interbotix_ros_xseries/interbotix_xs_sdk
