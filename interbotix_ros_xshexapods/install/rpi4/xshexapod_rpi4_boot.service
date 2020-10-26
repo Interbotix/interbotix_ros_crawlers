@@ -6,7 +6,7 @@
 Description=Start X-Series Hexapod Joystick Control
 
 [Service]
-ExecStart=/home/pibot/interbotix_ws/src/interbotix_ros_crawlers/interbotix_rox_xshexapods/install/rpi4/xshexapod_rpi4_launch.sh
+ExecStart=/home/pibot/interbotix_ws/src/interbotix_ros_crawlers/interbotix_ros_xshexapods/install/rpi4/xshexapod_rpi4_launch.sh
 Restart=on-failure
 
 [Install]
