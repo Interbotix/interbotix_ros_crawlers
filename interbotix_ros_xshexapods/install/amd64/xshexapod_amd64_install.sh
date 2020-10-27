@@ -8,9 +8,11 @@ if [ $ubuntu_version == "16.04" ]; then
   ROS_NAME="kinetic"
 elif [ $ubuntu_version == "18.04" ]; then
   ROS_NAME="melodic"
+elif [ $ubuntu_version == "20.04" ]; then
+  ROS_NAME="noetic"
 else
   echo -e "Unsupported Ubuntu verison: $ubuntu_version"
-  echo -e "Interbotix Hexapod only works with 16.04 or 18.04"
+  echo -e "Interbotix Hexapod only works with 16.04, 18.04, or 20.04"
   exit 1
 fi
 
@@ -40,7 +42,11 @@ if [ $(dpkg-query -W -f='${Status}' ros-$ROS_NAME-desktop-full 2>/dev/null | gre
     sudo rm /etc/ros/rosdep/sources.list.d/20-default.list
   fi
   echo "source /opt/ros/$ROS_NAME/setup.bash" >> ~/.bashrc
-  sudo apt -y install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+  if [ $ROS_NAME != "noetic" ]; then
+    sudo apt -y install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+  else
+    sudo apt -y install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
+  fi
   sudo rosdep init
   rosdep update
 else
