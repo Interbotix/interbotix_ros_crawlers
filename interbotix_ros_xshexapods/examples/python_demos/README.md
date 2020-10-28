@@ -36,7 +36,7 @@ roslaunch interbotix_xshexapod_control xshexapod_control.launch robot_model:=wxm
 ```
 In another terminal, navigate to this directory and type...
 ```
-python move_in_place.py
+python move_in_place.py        # python3 move_in_place.py if using ROS Noetic
 ```
 You should observe the robot move its body along and around the X, Y, and Z axes of the `/<robot_name>/base_link` frame.
 
