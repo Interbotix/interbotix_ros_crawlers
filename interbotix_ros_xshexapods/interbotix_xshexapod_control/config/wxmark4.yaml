@@ -38,7 +38,7 @@ motors:
     ID: 2
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -48,7 +48,7 @@ motors:
     ID: 3
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -68,7 +68,7 @@ motors:
     ID: 5
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -78,7 +78,7 @@ motors:
     ID: 6
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -98,7 +98,7 @@ motors:
     ID: 8
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -108,7 +108,7 @@ motors:
     ID: 9
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -128,7 +128,7 @@ motors:
     ID: 11
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -138,7 +138,7 @@ motors:
     ID: 12
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -158,7 +158,7 @@ motors:
     ID: 14
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -168,7 +168,7 @@ motors:
     ID: 15
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -188,7 +188,7 @@ motors:
     ID: 17
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
@@ -198,7 +198,7 @@ motors:
     ID: 18
     Baud_Rate: 3
     Return_Delay_Time: 0
-    Drive_Mode: 1
+    Drive_Mode: 0
     Velocity_Limit: 200
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
