@@ -168,7 +168,7 @@ class HexapodRobot(object):
         if (msg.reboot_cmd == HexJoy.REBOOT_MOTORS):
             self.hexbot.pixels.set_color(color=self.led_states["reboot"], set_all_leds=True)
             self.hexbot.dxl.robot_reboot_motors("group", "all", True, True)
-            self.hexbot.dxl.srv_set_reg("group", "all", "Position_P_Gain", self.position_p_gain)
+            self.hexbot.dxl.srv_set_reg("group", "all", "Position_P_Gain", self.p_gain)
             self.hexbot.pixels.set_color(color=self.led_states["leg"], set_all_leds=True)
 
         # Check the set_home_pose_cmd
