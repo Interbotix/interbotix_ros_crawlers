@@ -15,6 +15,8 @@
   <arg name="x_neg_yaw_fudge"                   default="0"/>
   <arg name="y_pos_yaw_fudge"                   default="0"/>
   <arg name="y_neg_yaw_fudge"                   default="0"/>
+  <arg name="p_gain"                            default="800"/>
+  <arg name="move_step_time"                    default="0.15"/>
   <arg name="num_steps"                         default="20"/>
   <arg name="max_foot_height"                   default="0.04"/>
   <arg name="launch_driver"                     default="true"/>
@@ -62,6 +64,8 @@
     <param name="x_neg_yaw_fudge"                 value="$(arg x_neg_yaw_fudge)"/>
     <param name="y_pos_yaw_fudge"                 value="$(arg y_pos_yaw_fudge)"/>
     <param name="y_neg_yaw_fudge"                 value="$(arg y_neg_yaw_fudge)"/>
+    <param name="p_gain"                          value="$(arg p_gain)"/>
+    <param name="move_step_time"                  value="$(arg move_step_time)"/>
     <param name="num_steps"                       value="$(arg num_steps)"/>
     <param name="max_foot_height"                 value="$(arg max_foot_height)"/>
     <param name="robot_model"                     value="$(arg robot_model)"/>
