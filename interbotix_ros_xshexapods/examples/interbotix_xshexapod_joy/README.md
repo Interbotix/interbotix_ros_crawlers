@@ -48,7 +48,7 @@ Before starting the hexapod, either hold the body in the air or position the leg
 ```
 roslaunch interbotix_xshexapod_joy xshexapod_joy.launch robot_model:=wxmark4
 ```
-A red error message might appear in the screen saying `Couldn't open joystick force feedback!`. This is normal and will not affect the joystick operation. To further customize the launch file at run-time, look at the table below:
+Two red or yellow messages might appear in the terminal mentioning how the root link has an inertia specified in the URDF or joystick force feedback couldn't be configured properly. This is normal and will not affect the joystick operation. To further customize the launch file at run-time, look at the table below. Note that it is recommended to narrow the hexapod stance by 2 or 3 cm, and to raise the hexapod body height a bit for optimal usage (see the joystick button mappings below to see how to do this).
 
 | Argument | Description | Default Value |
 | -------- | ----------- | :-----------: |
@@ -59,9 +59,9 @@ A red error message might appear in the screen saying `Couldn't open joystick fo
 | load_configs | a boolean that specifies whether or not the initial register values (under the 'motors' heading) in a Motor Config file should be written to the motors; as the values being written are stored in each motor's EEPROM (which means the values are retained even after a power cycle), this can be set to false after the first time using the robot. Setting to false also shortens the node startup time by a few seconds and preserves the life of the EEPROM | true |
 | threshold | value from 0 to 1 defining joystick sensitivity; a larger number means the joystick should be less sensitive | 0.75 |
 | controller | type of controller ('ps3' or 'ps4') | ps4 |
-| x_stride | distance in meters that the hexapod should go forward/backward in a single gait cycle | 0.06 |
+| x_stride | distance in meters that the hexapod should go forward/backward in a single gait cycle | 0.10 |
 | y_stride | distance in meters that the hexapod should go side-to-side in a single gait cycle | 0.06 |
-| yaw_stride | distance in radians that the hexapod should rotate in a single gait cycle | 0.2618 |
+| yaw_stride | distance in radians that the hexapod should rotate in a single gait cycle | 0.3927 |
 | x_pos_yaw_fudge | distance in radians that the hexapod should rotate in a single gait cycle while walking forward; use to account for drift | 0 |
 | x_neg_yaw_fudge | distance in radians that the hexapod should rotate in a single gait cycle while walking backward; use to account for drift | 0 |
 | y_pos_yaw_fudge | distance in radians that the hexapod should rotate in a single gait cycle while crab-walking left; use to account for drift | 0 |

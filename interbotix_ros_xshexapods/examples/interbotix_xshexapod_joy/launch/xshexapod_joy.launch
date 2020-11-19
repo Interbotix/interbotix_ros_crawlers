@@ -8,9 +8,9 @@
   <arg name="use_pixels"                        default="true"/>
   <arg name="threshold"                         default="0.5"/>
   <arg name="controller"                        default="ps4"/>
-  <arg name="x_stride"                          default="0.06"/>
+  <arg name="x_stride"                          default="0.10"/>
   <arg name="y_stride"                          default="0.06"/>
-  <arg name="yaw_stride"                        default="0.2618"/>
+  <arg name="yaw_stride"                        default="0.3927"/>
   <arg name="x_pos_yaw_fudge"                   default="0"/>
   <arg name="x_neg_yaw_fudge"                   default="0"/>
   <arg name="y_pos_yaw_fudge"                   default="0"/>
