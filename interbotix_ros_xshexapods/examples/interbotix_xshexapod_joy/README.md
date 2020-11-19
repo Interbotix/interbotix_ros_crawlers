@@ -145,3 +145,6 @@ If the hexapod continues to walk strangely, you may be low on battery (below 10V
 This tends to happen if the PS4 controller is left idle for a few minutes. To fix it, hold down the *PS* button until the Blue LED at the front shuts off. Then tap it again and wait for it to turn blue. At this point, it should work again.
 
 Otherwise, the PS4 controller may be low on juice. So go ahead and charge it!
+
+##### Can't find Dynamixel ID 'X'
+This issue is addressed in the [Interbotix Dynamixel Troubleshooting guide](https://github.com/Interbotix/interbotix_ros_core/blob/main/interbotix_ros_xseries/interbotix_xs_sdk/TROUBLESHOOTING.md#troubleshooting-a-dynamixel-based-robot). However, if you shutdown the joystick package launch file with any motor still in an error state, you will not be able to restart the robot without power cycling the problematic motor(s). The best way to do this is to find the motor that's flashing red, and just unplug/replug the upstream (closer to the robot's body) 3-pin cable. Because of the shelling, this might be difficult if the femur or tibia motor is in an error state. So in general, just unplug/replug the 3-pin cable that connects the coxa servo (of the problematic leg) to the main body.
