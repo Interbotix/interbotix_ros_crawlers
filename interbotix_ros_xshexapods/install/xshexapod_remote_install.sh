@@ -25,8 +25,7 @@ if [ ! -d "$INTERBOTIX_WS/src" ]; then
   catkin_make
   cd src
   git clone https://github.com/Interbotix/interbotix_ros_crawlers.git
-  # cd interbotix_ros_crawlers
-  # git checkout $ROS_NAME
+  cd interbotix_ros_crawlers && git checkout $ROS_NAME && cd ..
   echo "source $INTERBOTIX_WS/devel/setup.bash" >> ~/.bashrc
 else
   echo "Interbotix Hexapod ROS packages already installed!"
