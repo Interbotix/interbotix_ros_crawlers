@@ -4,7 +4,7 @@ import rospy
 import copy
 import threading
 from interbotix_xshexapod_joy.msg import HexJoy
-from interbotix_xs_modules import angle_manipulation as ang
+from interbotix_common_modules import angle_manipulation as ang
 from interbotix_xs_modules.hexapod import InterbotixHexapodXS
 
 # Color Macros in Hexidecimal (used to control colors on the Neopixels)
