@@ -50,7 +50,7 @@ The hexapods in our kits ship fully assembled. Refer to the product pages above 
 To get all the code setup, refer to the computer platform types below (currently only one option, but this may change in the future) and run the appropriate installation script. Afterwards, continue with the [Installation Checks](#installation-checks) sub-section.
 
 ###### Raspberry Pi 4B (ARM64 Architecture)
-If you purchased a RPi4-based ROS hexapod from our website, there is no need to install anything as the Pi should already come preloaded with all the necessary software. Instead, just skip to the [Remote Install](#remote-install) section. If you purchased your own Raspberry Pi 4B from a third party, feel free to follow the instructions [here](https://github.com/Interbotix/interbotix_ros_toolboxes/blob/main/interbotix_rpi_toolbox/README.md) to get it properly setup before following the commands below. If you only purchased the stand-alone Raspberry Pi 4B Kit from our store (which comes pre-configured with Ubuntu and ROS), and would like to use it with a hexapod, then follow the commands below to download and run the installation script. Note that the script will install the full desktop version of ROS Melodic/Noetic if it's not yet on your system, ask you for your desired robot model (ex. wxmark4), and prompt you about whether or not you'd like the Joystick ROS package to start at boot. Also note that the user-password is *pibot*.
+If you purchased a RPi4-based ROS hexapod from our website, there is no need to install anything as the Pi should already come preloaded with all the necessary software. Instead, just skip to the [Remote Install](#remote-install) section. If you purchased your own Raspberry Pi 4B from a third party, feel free to follow the instructions [here](https://github.com/Interbotix/interbotix_ros_toolboxes/blob/main/interbotix_rpi_toolbox/README.md) to get it properly setup before following the commands below. If you only purchased the stand-alone Raspberry Pi 4B Kit from our store (which comes pre-configured with Ubuntu and ROS), and would like to use it with a hexapod, then follow the commands below to download and run the installation script. Note that the script will install the full desktop version of ROS Melodic/Noetic if it's not yet on your system, ask you for your desired robot model (ex. wxmark4), and prompt you about whether or not you'd like the Joystick ROS package to start at boot. Also note that the user-password is *interbotix*.
 
     $ sudo apt install curl
     $ curl 'https://raw.githubusercontent.com/Interbotix/interbotix_ros_crawlers/main/interbotix_ros_xshexapods/install/rpi4/xshexapod_rpi4_install.sh' > xshexapod_rpi4_install.sh
@@ -73,7 +73,7 @@ To SSH from your remote to the robot computer, first connect your personal Linux
 
     $ ssh -X pibot@pibot.local
 
-You will be prompted for a password - just type *pibot* and you should be in!
+You will be prompted for a password - just type *interbotix* and you should be in!
 
 The *-X* flag in the command above allows window forwarding. This means that it's possible to open small graphical applications on the hexapod computer which will be forwarded to your personal computer. Let's open the terminal application by...
 

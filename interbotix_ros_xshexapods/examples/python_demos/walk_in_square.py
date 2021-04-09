@@ -7,6 +7,7 @@ from interbotix_xs_modules.hexapod import InterbotixHexapodXS
 
 def main():
     bot = InterbotixHexapodXS('pxmark4')
+    bot.hex.move_in_place(z=0.1)
     bot.hex.modify_stance(-0.02)
     bot.hex.move_in_world(x_stride=0.06, num_cycles=2, gait_type="tripod")
     bot.hex.move_in_world(y_stride=0.06, num_cycles=2, gait_type="ripple")
