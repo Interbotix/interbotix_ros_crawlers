@@ -35,4 +35,4 @@ This is the bare minimum needed to get up and running. Take a look at the table 
 | paused | start Gazebo in a paused state | true |
 | recording | enable Gazebo state log recording | false |
 | use_sim_time | tells ROS nodes asking for time to get the Gazebo-published simulation time, published over the ROS topic /clock | true |
-| use_position_controllers | set to true to have the ability to command arbitrary positions to the turret joints in Gazebo | true |
+| use_position_controllers | set to true to have the ability to command arbitrary positions to the hexapod's joints in Gazebo | true |

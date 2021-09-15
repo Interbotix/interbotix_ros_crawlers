@@ -34,6 +34,10 @@ To get started, open up a terminal and type (assuming a WidowX Mark IV is being 
 ```
 roslaunch interbotix_xshexapod_control xshexapod_control.launch robot_model:=wxmark4
 ```
+Note, that if you want to test out your code first on a [simulated](https://github.com/Interbotix/interbotix_ros_core/tree/main/interbotix_ros_xseries/interbotix_xs_sdk#overview) hexapod, you can type...
+```
+roslaunch interbotix_xshexapod_control xshexapod_control.launch robot_model:=wxmark4 use_sim:=true use_rviz:=true
+```
 In another terminal, navigate to this directory and type...
 ```
 python move_in_place.py        # python3 move_in_place.py if using ROS Noetic
