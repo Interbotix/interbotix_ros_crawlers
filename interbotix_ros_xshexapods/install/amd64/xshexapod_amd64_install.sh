@@ -67,6 +67,7 @@ if [ ! -d "$INTERBOTIX_WS/src" ]; then
   cd interbotix_ros_crawlers && git checkout $ROS_NAME && cd ..
   rm interbotix_ros_core/interbotix_ros_xseries/CATKIN_IGNORE
   rm interbotix_ros_toolboxes/interbotix_xs_toolbox/CATKIN_IGNORE
+  rm interbotix_ros_toolboxes/interbotix_rpi_toolbox/CATKIN_IGNORE
   cd interbotix_ros_core/interbotix_ros_xseries/interbotix_xs_sdk
   sudo cp 99-interbotix-udev.rules /etc/udev/rules.d/
   sudo cp 99-interbotix-udev.rules /etc/udev/rules.d/
