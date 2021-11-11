@@ -7,8 +7,8 @@ This package can be used to control any X-Series hexapod using a SONY PS3/PS4 co
 ![xshexapod_joy_flowchart](images/xshexapod_joy_flowchart.png)
 As shown above, the *interbotix_xshexapod_joy* package builds on top of the *interbotix_xshexapod_control* package. To get pointers about the nodes in that package, please look at its README. The other nodes are described below:
 - **joy_node** - a ROS driver for a generic Linux joystick; it reads data from a joystick over Bluetooth and publishes  [sensor_msgs/Joy](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Joy.html) messages to the `commands/joy_raw` topic
-- **xshexapod_joy** - responsible for reading in raw [sensor_msgs/Joy](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Joy.html) messages from the `commands/joy_raw` topic and converting them into [HexJoy](msg/HexJoy.msg) messages; this makes the code more readable and allows users to remap buttons very easily later.
-- **xshexapod_robot** - responsible for reading in [HexJoy](msg/HexJoy.msg) messages and sending joint commands to the **xs_sdk** node; all joint commands are the result of IK outputs.
+- **xshexapod_joy** - responsible for reading in raw [sensor_msgs/Joy](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Joy.html) messages from the `commands/joy_raw` topic and converting them into [interbotix_xs_msgs/HexJoy](https://github.com/Interbotix/interbotix_ros_core/tree/main/interbotix_ros_xseries/interbotix_xs_msgs/msg/HexJoy.msg) messages; this makes the code more readable and allows users to remap buttons very easily later.
+- **xshexapod_robot** - responsible for reading in [interbotix_xs_msgs/HexJoy](https://github.com/Interbotix/interbotix_ros_core/tree/main/interbotix_ros_xseries/interbotix_xs_msgs/msg/HexJoy.msg) messages and sending joint commands to the **xs_sdk** node; all joint commands are the result of IK outputs.
 
 ## Bluetooth Setup
 #### Sony PS4 Controller (Recommended)

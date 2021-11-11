@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Joy.h>
-#include "interbotix_xshexapod_joy/HexJoy.h"
+#include "interbotix_xs_msgs/HexJoy.h"
 
 // PS3 Controller button mappings
 static const std::map<std::string, int> ps3 = {{"PREVIOUS", 0},             // buttons start here
@@ -50,7 +50,7 @@ ros::Publisher pub_joy_cmd;                                 // ROS Publisher to 
 double threshold;                                           // Joystick sensitivity threshold
 std::string controller_type;                                // Holds the name of the controller received from the ROS Parameter server
 std::map<std::string, int> cntlr;                           // Holds the controller button mappings
-interbotix_xshexapod_joy::HexJoy prev_joy_cmd;              // Keep track of the previously commanded HexJoy message so that only unique messages are published
+interbotix_xs_msgs::HexJoy prev_joy_cmd;              // Keep track of the previously commanded HexJoy message so that only unique messages are published
 
 /// @brief Joystick callback to create custom HexJoy messages to control the Hexapod
 /// @param msg - raw sensor_msgs::Joy data
@@ -60,18 +60,18 @@ void joy_state_cb(const sensor_msgs::Joy &msg)
   static bool flip_move_type_cmd_last_state = false;
   static bool flip_in_place_cmd = false;
   static bool flip_in_place_cmd_last_state = false;
-  interbotix_xshexapod_joy::HexJoy joy_cmd;
+  interbotix_xs_msgs::HexJoy joy_cmd;
 
   // Check if the move_type_cmd should be flipped
   if (msg.buttons.at(cntlr["MOVE_TYPE"]) == 1 && flip_move_type_cmd_last_state == false)
   {
     flip_move_type_cmd = true;
-    joy_cmd.move_type_cmd = interbotix_xshexapod_joy::HexJoy::MOVE_LEG;
+    joy_cmd.move_type_cmd = interbotix_xs_msgs::HexJoy::MOVE_LEG;
   }
   else if (msg.buttons.at(cntlr["MOVE_TYPE"]) == 1 && flip_move_type_cmd_last_state == true)
   {
     flip_move_type_cmd = false;
-    joy_cmd.move_type_cmd = interbotix_xshexapod_joy::HexJoy::MOVE_HEXAPOD;
+    joy_cmd.move_type_cmd = interbotix_xs_msgs::HexJoy::MOVE_HEXAPOD;
   }
   else if (msg.buttons.at(cntlr["MOVE_TYPE"]) == 0)
     flip_move_type_cmd_last_state = flip_move_type_cmd;
@@ -86,107 +86,107 @@ void joy_state_cb(const sensor_msgs::Joy &msg)
 
   // Check the place_y_cmd / place_roll_cmd
   if (msg.axes.at(cntlr["PLACE_Y_ROLL"]) >= threshold && flip_in_place_cmd == false)
-    joy_cmd.place_y_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_Y_INC;
+    joy_cmd.place_y_cmd = interbotix_xs_msgs::HexJoy::PLACE_Y_INC;
   else if (msg.axes.at(cntlr["PLACE_Y_ROLL"]) <= -threshold && flip_in_place_cmd == false)
-    joy_cmd.place_y_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_Y_DEC;
+    joy_cmd.place_y_cmd = interbotix_xs_msgs::HexJoy::PLACE_Y_DEC;
   else if (msg.axes.at(cntlr["PLACE_Y_ROLL"]) >= threshold && flip_in_place_cmd == true)
-    joy_cmd.place_roll_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_ROLL_CW;
+    joy_cmd.place_roll_cmd = interbotix_xs_msgs::HexJoy::PLACE_ROLL_CW;
   else if (msg.axes.at(cntlr["PLACE_Y_ROLL"]) <= -threshold && flip_in_place_cmd == true)
-    joy_cmd.place_roll_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_ROLL_CCW;
+    joy_cmd.place_roll_cmd = interbotix_xs_msgs::HexJoy::PLACE_ROLL_CCW;
 
   // Check the place_x_cmd / place_pitch_cmd
   if (msg.axes.at(cntlr["PLACE_X_PITCH"]) >= threshold && flip_in_place_cmd == false)
-    joy_cmd.place_x_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_X_INC;
+    joy_cmd.place_x_cmd = interbotix_xs_msgs::HexJoy::PLACE_X_INC;
   else if (msg.axes.at(cntlr["PLACE_X_PITCH"]) <= -threshold && flip_in_place_cmd == false)
-    joy_cmd.place_x_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_X_DEC;
+    joy_cmd.place_x_cmd = interbotix_xs_msgs::HexJoy::PLACE_X_DEC;
   else if (msg.axes.at(cntlr["PLACE_X_PITCH"]) >= threshold && flip_in_place_cmd == true)
-    joy_cmd.place_pitch_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_PITCH_DOWN;
+    joy_cmd.place_pitch_cmd = interbotix_xs_msgs::HexJoy::PLACE_PITCH_DOWN;
   else if (msg.axes.at(cntlr["PLACE_X_PITCH"]) <= -threshold && flip_in_place_cmd == true)
-    joy_cmd.place_pitch_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_PITCH_UP;
+    joy_cmd.place_pitch_cmd = interbotix_xs_msgs::HexJoy::PLACE_PITCH_UP;
 
   // Check the world_x_cmd
   if (msg.axes.at(cntlr["WORLD_X"]) >= threshold)
-    joy_cmd.world_x_cmd = interbotix_xshexapod_joy::HexJoy::WORLD_X_INC;
+    joy_cmd.world_x_cmd = interbotix_xs_msgs::HexJoy::WORLD_X_INC;
   else if (msg.axes.at(cntlr["WORLD_X"]) <= -threshold)
-    joy_cmd.world_x_cmd = interbotix_xshexapod_joy::HexJoy::WORLD_X_DEC;
+    joy_cmd.world_x_cmd = interbotix_xs_msgs::HexJoy::WORLD_X_DEC;
 
   // Check the world_y_cmd
   if (msg.axes.at(cntlr["WORLD_Y"]) >= threshold)
-    joy_cmd.world_y_cmd = interbotix_xshexapod_joy::HexJoy::WORLD_Y_INC;
+    joy_cmd.world_y_cmd = interbotix_xs_msgs::HexJoy::WORLD_Y_INC;
   else if (msg.axes.at(cntlr["WORLD_Y"]) <= -threshold)
-    joy_cmd.world_y_cmd = interbotix_xshexapod_joy::HexJoy::WORLD_Y_DEC;
+    joy_cmd.world_y_cmd = interbotix_xs_msgs::HexJoy::WORLD_Y_DEC;
 
   // Check the place_z_cmd
   if (msg.buttons.at(cntlr["PLACE_Z_INC"]) == 1)
-   joy_cmd.place_z_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_Z_INC;
+   joy_cmd.place_z_cmd = interbotix_xs_msgs::HexJoy::PLACE_Z_INC;
   else if (msg.buttons.at(cntlr["PLACE_Z_DEC"]) == 1)
-   joy_cmd.place_z_cmd = interbotix_xshexapod_joy::HexJoy::PLACE_Z_DEC;
+   joy_cmd.place_z_cmd = interbotix_xs_msgs::HexJoy::PLACE_Z_DEC;
 
   // Check the world_yaw_cmd
   if (msg.buttons.at(cntlr["WORLD_YAW_CCW"]) == 1)
-   joy_cmd.world_yaw_cmd = interbotix_xshexapod_joy::HexJoy::WORLD_YAW_CCW;
+   joy_cmd.world_yaw_cmd = interbotix_xs_msgs::HexJoy::WORLD_YAW_CCW;
   else if (msg.buttons.at(cntlr["WORLD_YAW_CW"]) == 1)
-   joy_cmd.world_yaw_cmd = interbotix_xshexapod_joy::HexJoy::WORLD_YAW_CW;
+   joy_cmd.world_yaw_cmd = interbotix_xs_msgs::HexJoy::WORLD_YAW_CW;
 
   // Check the pose_cmd
   if (msg.buttons.at(cntlr["HOME_POSE"]) == 1)
-   joy_cmd.pose_cmd = interbotix_xshexapod_joy::HexJoy::HOME_POSE;
+   joy_cmd.pose_cmd = interbotix_xs_msgs::HexJoy::HOME_POSE;
   else if (msg.buttons.at(cntlr["SLEEP_POSE"]) == 1)
-   joy_cmd.pose_cmd = interbotix_xshexapod_joy::HexJoy::SLEEP_POSE;
+   joy_cmd.pose_cmd = interbotix_xs_msgs::HexJoy::SLEEP_POSE;
 
   // Check the gait_toggle_cmd
   if (msg.buttons.at(cntlr["NEXT"]) == 1 && flip_move_type_cmd == false)
-   joy_cmd.gait_toggle_cmd = interbotix_xshexapod_joy::HexJoy::GAIT_NEXT;
+   joy_cmd.gait_toggle_cmd = interbotix_xs_msgs::HexJoy::GAIT_NEXT;
   else if (msg.buttons.at(cntlr["PREVIOUS"]) == 1 && flip_move_type_cmd == false)
-   joy_cmd.gait_toggle_cmd = interbotix_xshexapod_joy::HexJoy::GAIT_PREVIOUS;
+   joy_cmd.gait_toggle_cmd = interbotix_xs_msgs::HexJoy::GAIT_PREVIOUS;
 
   // Check the leg_toggle_cmd
   if (msg.buttons.at(cntlr["NEXT"]) == 1 && flip_move_type_cmd == true)
-   joy_cmd.leg_toggle_cmd = interbotix_xshexapod_joy::HexJoy::LEG_NEXT;
+   joy_cmd.leg_toggle_cmd = interbotix_xs_msgs::HexJoy::LEG_NEXT;
   else if (msg.buttons.at(cntlr["PREVIOUS"]) == 1 && flip_move_type_cmd == true)
-   joy_cmd.leg_toggle_cmd = interbotix_xshexapod_joy::HexJoy::LEG_PREVIOUS;
+   joy_cmd.leg_toggle_cmd = interbotix_xs_msgs::HexJoy::LEG_PREVIOUS;
 
   // Check the stance_cmd
   if (msg.buttons.at(cntlr["WIDEN_STANCE"]) == 1 && flip_move_type_cmd == false)
-    joy_cmd.stance_cmd = interbotix_xshexapod_joy::HexJoy::WIDEN_STANCE;
+    joy_cmd.stance_cmd = interbotix_xs_msgs::HexJoy::WIDEN_STANCE;
   else if (msg.buttons.at(cntlr["REBOOT_NARROW_STANCE"]) == 1 && flip_move_type_cmd == false)
-    joy_cmd.stance_cmd = interbotix_xshexapod_joy::HexJoy::NARROW_STANCE;
+    joy_cmd.stance_cmd = interbotix_xs_msgs::HexJoy::NARROW_STANCE;
 
   // Check the reboot_cmd
   if (msg.buttons.at(cntlr["REBOOT_NARROW_STANCE"]) == 1 && flip_move_type_cmd == true)
-    joy_cmd.reboot_cmd = interbotix_xshexapod_joy::HexJoy::REBOOT_MOTORS;
+    joy_cmd.reboot_cmd = interbotix_xs_msgs::HexJoy::REBOOT_MOTORS;
 
   // Check the set_home_pose_cmd
   if (msg.buttons.at(cntlr["SET_HOME_POSE"]) == 1)
-    joy_cmd.set_home_pose_cmd = interbotix_xshexapod_joy::HexJoy::SET_HOME_POSE;
+    joy_cmd.set_home_pose_cmd = interbotix_xs_msgs::HexJoy::SET_HOME_POSE;
 
   if (controller_type == "ps3")
   {
    // Check the speed_cmd
    if (msg.buttons.at(cntlr["SPEED_INC"]) == 1)
-     joy_cmd.speed_cmd = interbotix_xshexapod_joy::HexJoy::SPEED_INC;
+     joy_cmd.speed_cmd = interbotix_xs_msgs::HexJoy::SPEED_INC;
    else if (msg.buttons.at(cntlr["SPEED_DEC"]) == 1)
-     joy_cmd.speed_cmd = interbotix_xshexapod_joy::HexJoy::SPEED_DEC;
+     joy_cmd.speed_cmd = interbotix_xs_msgs::HexJoy::SPEED_DEC;
 
    // Check the speed_toggle_cmd
    if (msg.buttons.at(cntlr["SPEED_COURSE"]) == 1)
-     joy_cmd.speed_toggle_cmd = interbotix_xshexapod_joy::HexJoy::SPEED_COURSE;
+     joy_cmd.speed_toggle_cmd = interbotix_xs_msgs::HexJoy::SPEED_COURSE;
    else if (msg.buttons.at(cntlr["SPEED_FINE"]) == 1)
-     joy_cmd.speed_toggle_cmd = interbotix_xshexapod_joy::HexJoy::SPEED_FINE;
+     joy_cmd.speed_toggle_cmd = interbotix_xs_msgs::HexJoy::SPEED_FINE;
   }
   else if (controller_type == "ps4")
   {
    // Check the speed_cmd
    if (msg.axes.at(cntlr["SPEED"]) == 1)
-     joy_cmd.speed_cmd = interbotix_xshexapod_joy::HexJoy::SPEED_INC;
+     joy_cmd.speed_cmd = interbotix_xs_msgs::HexJoy::SPEED_INC;
    else if (msg.axes.at(cntlr["SPEED"]) == -1)
-     joy_cmd.speed_cmd = interbotix_xshexapod_joy::HexJoy::SPEED_DEC;
+     joy_cmd.speed_cmd = interbotix_xs_msgs::HexJoy::SPEED_DEC;
 
    // Check the toggle_speed_cmd
    if (msg.axes.at(cntlr["SPEED_TYPE"]) == 1)
-     joy_cmd.speed_toggle_cmd = interbotix_xshexapod_joy::HexJoy::SPEED_COURSE;
+     joy_cmd.speed_toggle_cmd = interbotix_xs_msgs::HexJoy::SPEED_COURSE;
    else if (msg.axes.at(cntlr["SPEED_TYPE"]) == -1)
-     joy_cmd.speed_toggle_cmd = interbotix_xshexapod_joy::HexJoy::SPEED_FINE;
+     joy_cmd.speed_toggle_cmd = interbotix_xs_msgs::HexJoy::SPEED_FINE;
   }
 
   // Only publish a HexJoy message if any of the following fields have changed.
@@ -222,7 +222,7 @@ int main(int argc, char **argv)
  else
    cntlr = ps4;
  ros::Subscriber sub_joy_raw = n.subscribe("commands/joy_raw", 10, joy_state_cb);
- pub_joy_cmd = n.advertise<interbotix_xshexapod_joy::HexJoy>("commands/joy_processed", 10);
+ pub_joy_cmd = n.advertise<interbotix_xs_msgs::HexJoy>("commands/joy_processed", 10);
  ros::spin();
  return 0;
 }
